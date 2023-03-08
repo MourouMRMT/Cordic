@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1678311071 source:c:\users\mouro\desktop\coursge\4a\semestre_8\esn468\tp_esn9\script_c\cordic_fixe\main.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+
