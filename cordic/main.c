@@ -70,7 +70,7 @@ int main()
 
 
     FILE* fichier=NULL;
-    fichier = fopen("output/erreur_max.dat", "w+");
+    fichier = fopen("output/erreur_n_64.dat", "w+");
 
 
 
@@ -84,18 +84,22 @@ int main()
 
 
     printf("Entrez PHI et le nombre d iterations:");
-    //scanf("%lf %d",&PHI,&iter);
+    scanf("%lf %d",&PHI,&iter);
     for(int i=4;i<64;i++)
     {
         for(int j=0;j<=90;j++)
         {
-            printf("iterations %d   |",j);
-            cordic(PHI+j,i,&xf,&yf,&erc,&ers);
+           printf("iterations %d   |",j);
+            cordic(PHI+j,iter,&xf,&yf,&erc,&ers);
             if(erc>errmax)
             {
                 errmax=erc;
             }
-
+        if(fichier!=NULL)
+        {
+            //fprintf(fichier,"%d\t%.16lf\t%.16lf\n",j,erc,ers);
+            //fprintf(fichier,"%d\t%lf\n",i,log10(errmax));
+        }
         }
         if(fichier!=NULL)
         {
@@ -112,7 +116,7 @@ int main()
     //system ("gnuplot -p -e \"plot 'output/erreur_n_8.dat' u 1:2 w l, 'output/erreur_n_8.dat' u 1:3 w l\";");
     //system ("gnuplot -p -e \"plot 'output/erreur_n_16.dat' u 1:2 w l, 'output/erreur_n_16.dat' u 1:3 w l\";");
     //system ("gnuplot -p -e \"plot 'output/erreur_n_32.dat' u 1:2 w l, 'output/erreur_n_32.dat' u 1:3 w l\";");
-    //system ("gnuplot -p -e \"plot 'output/erreur_n_64.dat' u 1:2 w l, 'output/erreur_n_64.dat' u 1:3 w l\";");
+    system ("gnuplot -p -e \"plot 'output/erreur_n_64.dat' u 1:2 w l, 'output/erreur_n_64.dat' u 1:3 w l\";");
     //system ("gnuplot -p -e \"plot 'output/erreur_max.dat' u 1:2 w l\";");
     return 0;
 }
