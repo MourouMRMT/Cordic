@@ -85,7 +85,7 @@ int main()
 
 
     FILE* fichier=NULL;
-    fichier = fopen("output/erreur_n_14.dat", "w+");
+    //fichier = fopen("output/erreur_n_14.dat", "w+");
 
 
 
@@ -128,7 +128,7 @@ int main()
     //system ("gnuplot -p -e \"plot 'output/erreur_n_8.dat' u 1:2 w l, 'output/erreur_n_8.dat' u 1:3 w l\";");
     //system ("gnuplot -p -e \"plot 'output/erreur_n_16.dat' u 1:2 w l, 'output/erreur_n_16.dat' u 1:3 w l\";");
     //system ("gnuplot -p -e \"plot 'output/erreur_n_32.dat' u 1:2 w l, 'output/erreur_n_32.dat' u 1:3 w l\";");
-    system ("gnuplot -p -e \"plot 'output/erreur_n_14.dat' u 1:2 w l, 'output/erreur_n_14.dat' u 1:3 w l\";");
+    //system ("gnuplot -p -e \"plot 'output/erreur_n_14.dat' u 1:2 w l, 'output/erreur_n_14.dat' u 1:3 w l\";");
     //system ("gnuplot -p -e \"plot 'output/erreur_max.dat' u 1:2 w l\";");
     return 0;
 }
