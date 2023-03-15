@@ -2,14 +2,17 @@
 #include <stdlib.h>
 #include<math.h>
 
-#define N 14
-#define PI 3.141592
+#define N 100
+#define PI M_PI
 
 short int Theta[N]={0};
-short int K[N]={0};
+//short int K[N]={0};
+short int A[N]={0};
+
 double coeff=PI/180.0;
 short int An;
-double M_val=1024;
+double M_val=100;
+double M_angle=100;
 
 unsigned short fp2fix(double M, double x)
 {
@@ -25,24 +28,27 @@ double fix2fp(double M, unsigned short x)
 void calcul_vecteur()
 {
     double An_temp=1;
+    double d=1;
     for(int i=0;i<N;i++)
     {
-        Theta[i]=fp2fix(M_val,atan(pow(2,-i)));
+        Theta[i]=fp2fix(M_angle,atan(d));
 
-        K[i]=fp2fix(M_val,cos(atan(pow(2,-i))));
+        //K[i]=fp2fix(M_val,cos(atan(pow(2,-i))));
 
-        An_temp*=cos(atan(pow(2,-i)));
+        An_temp*=cos(atan(d));
+        A[i]=fp2fix(M_angle,An_temp);
         //printf("T:%u K:%u \n",Theta[i],K[i]);
         //printf("An : %lf\n",An_temp);
+        d=d/2;
     }
-    An=fp2fix(M_val,An_temp);
+    //An=fp2fix(M_val,An_temp);
     //printf("An : %d\n",An);
 }
 
 short int cordic_fixe(short int phi_int,int n_iter,unsigned short *xr,unsigned short *yr,double *errcos,double *errsin)
 {
     short int x[2]={0};
-    x[0]=An;
+    x[0]=A[n_iter];
 
     //printf("An= %u\n",x[0]);
     short int y[2]={0};
@@ -62,7 +68,7 @@ short int cordic_fixe(short int phi_int,int n_iter,unsigned short *xr,unsigned s
             y[1]=y[0]-(x[0]>>(i));
             alpha=alpha-Theta[i];
         }
-        printf("x: %lf | y: %lf |alpha : %d |Theta : %d \n",fix2fp(M_val,x[0]),fix2fp(M_val,y[0]),alpha,Theta[i]);
+        //printf("x: %lf | y: %lf |alpha : %d |Theta : %d \n",fix2fp(M_val,x[0]),fix2fp(M_val,y[0]),alpha,Theta[i]);
         //printf("x: %u | y: %u \n",x[0],y[0]);
         x[0]=x[1];
         y[0]=y[1];
@@ -70,12 +76,12 @@ short int cordic_fixe(short int phi_int,int n_iter,unsigned short *xr,unsigned s
     }
     *xr=x[0];
     *yr=y[0];
-    printf("x: %u | y: %u \n",x[0],y[0]);
-    *errcos=fix2fp(M_val,*xr)-cos(fix2fp(M_val,phi_int));
-    *errsin=fix2fp(M_val,*yr)-sin(fix2fp(M_val,phi_int));
+    //printf("x: %u | y: %u \n",x[0],y[0]);
+    *errcos=abs(fix2fp(M_val,*xr)-cos(fix2fp(M_val,phi_int)));
+    *errsin=abs(fix2fp(M_val,*yr)-sin(fix2fp(M_val,phi_int)));
     printf("x: %lf | y: %lf",fix2fp(M_val,*xr),fix2fp(M_val,*yr));
-    printf(" |errcos = %d | ",*errcos);
-    printf("errsin = %d\n",*errsin);
+    printf(" |errcos = %lf | ",*errcos);
+    printf("errsin = %lf\n",*errsin);
 }
 
 
@@ -85,7 +91,7 @@ int main()
 
 
     FILE* fichier=NULL;
-    //fichier = fopen("output/erreur_n_14.dat", "w+");
+    //fichier = fopen("output/erreur_n_4.dat", "w+");
 
 
 
@@ -97,8 +103,8 @@ int main()
     calcul_vecteur();
 
     //printf("%lu ",sizeof(unsigned short));
-    printf("Entrez PHI: ");
-    scanf("%lf",&PHI);
+    printf("Entrez PHI et le nombre d'iterations: ");
+    scanf("%lf %d",&PHI,&iter);
     //cordic_fixe(fp2fix(M_val,PHI*coeff),N,&xf,&yf,&erc,&ers);
 
     //for(int i=0;i<15;i++)
@@ -106,10 +112,14 @@ int main()
         for(int j=0;j<=90;j++)
         {
             printf("iterations %d   |",j);
-            cordic_fixe(fp2fix(M_val,(PHI+j)*coeff),N,&xf,&yf,&erc,&ers);
+            cordic_fixe(fp2fix(M_angle,(PHI+j)*coeff),iter,&xf,&yf,&erc,&ers);
             if(erc>errmax)
             {
                 errmax=erc;
+            }
+            if(ers>errmax)
+            {
+                errmax=ers;
             }
             if(fichier!=NULL)
             {
