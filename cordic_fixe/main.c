@@ -11,7 +11,7 @@ short int A[N]={0};
 
 double coeff=PI/180.0;
 short int An;
-double M_val=100;
+double M_val=1000;
 double M_angle=100;
 
 unsigned short fp2fix(double M, double x)
@@ -36,7 +36,7 @@ void calcul_vecteur()
         //K[i]=fp2fix(M_val,cos(atan(pow(2,-i))));
 
         An_temp*=cos(atan(d));
-        A[i]=fp2fix(M_angle,An_temp);
+        A[i]=fp2fix(M_val,An_temp);
         //printf("T:%u K:%u \n",Theta[i],K[i]);
         //printf("An : %lf\n",An_temp);
         d=d/2;
@@ -77,8 +77,8 @@ short int cordic_fixe(short int phi_int,int n_iter,unsigned short *xr,unsigned s
     *xr=x[0];
     *yr=y[0];
     //printf("x: %u | y: %u \n",x[0],y[0]);
-    *errcos=abs(fix2fp(M_val,*xr)-cos(fix2fp(M_val,phi_int)));
-    *errsin=abs(fix2fp(M_val,*yr)-sin(fix2fp(M_val,phi_int)));
+    *errcos=abs(fix2fp(M_val,*xr)-cos(fix2fp(M_angle,phi_int)));
+    *errsin=abs(fix2fp(M_val,*yr)-sin(fix2fp(M_angle,phi_int)));
     printf("x: %lf | y: %lf",fix2fp(M_val,*xr),fix2fp(M_val,*yr));
     printf(" |errcos = %lf | ",*errcos);
     printf("errsin = %lf\n",*errsin);
@@ -101,14 +101,15 @@ int main()
     int iter;
     short int errmax=0;
     calcul_vecteur();
-
+    //printf("%d\n",sizeof(short int));
     //printf("%lu ",sizeof(unsigned short));
     printf("Entrez PHI et le nombre d'iterations: ");
     scanf("%lf %d",&PHI,&iter);
-    //cordic_fixe(fp2fix(M_val,PHI*coeff),N,&xf,&yf,&erc,&ers);
+    //cordic_fixe(fp2fix(M_angle,PHI*coeff),N,&xf,&yf,&erc,&ers);
 
     //for(int i=0;i<15;i++)
     //{
+
         for(int j=0;j<=90;j++)
         {
             printf("iterations %d   |",j);

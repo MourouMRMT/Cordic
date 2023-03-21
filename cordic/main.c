@@ -3,22 +3,22 @@
 #include<math.h>
 
 #define N 100
-#define PI 3.141592
+#define PI M_PI
+
+
+double coeff=PI/180.0;
 
 double Theta[N]={0};
 double K[N]={0};
-double coeff=PI/180.0;
-
 
 void calcul_vecteur()
 {
-    double temp=0;
+    double d=1;
     for(int i=0;i<N;i++)
     {
-        Theta[i]=atan(pow(2.0,-i));
-        temp=pow(2.0,-2*i);
-        K[i]=pow(1+temp,-0.5);
-        //printf("T: %lf K: %lf \n",Theta[i],K[i]);
+        Theta[i]=atan(d);
+        K[i]=cos(atan(d));
+        d=d/2;
     }
 }
 
@@ -26,7 +26,7 @@ double cordic(double phi_int,int n_iter,double *xr,double *yr,double *errcos,dou
 {
     double x[2]={0};
     x[0]=1.0;
-    for(int j=0;j<=n_iter;j++)
+    for(int j=0;j<=n_iter;j++) //Calcul de An
     {
         x[0]*=K[j];
     }
@@ -60,7 +60,6 @@ double cordic(double phi_int,int n_iter,double *xr,double *yr,double *errcos,dou
     printf(" |errcos = %.16lf | ",*errcos);
     printf("errsin = %.16lf\n",*errsin);
 
-
 }
 
 
@@ -70,7 +69,7 @@ int main()
 
 
     FILE* fichier=NULL;
-    fichier = fopen("output/erreur_n_64.dat", "w+");
+    fichier = fopen("output/erreur_n_32.dat", "w+");
 
 
 
@@ -85,8 +84,10 @@ int main()
 
     printf("Entrez PHI et le nombre d iterations:");
     scanf("%lf %d",&PHI,&iter);
-    for(int i=4;i<64;i++)
-    {
+    //cordic(PHI,iter,&xf,&yf,&erc,&ers);
+
+    //for(int i=4;i<64;i++)
+    //{
         for(int j=0;j<=90;j++)
         {
            printf("iterations %d   |",j);
@@ -95,19 +96,14 @@ int main()
             {
                 errmax=erc;
             }
-        if(fichier!=NULL)
-        {
-            //fprintf(fichier,"%d\t%.16lf\t%.16lf\n",j,erc,ers);
-            //fprintf(fichier,"%d\t%lf\n",i,log10(errmax));
-        }
-        }
-        if(fichier!=NULL)
-        {
-            //fprintf(fichier,"%d\t%.16lf\t%.16lf\n",j,erc,ers);
-            fprintf(fichier,"%d\t%lf\n",i,log10(errmax));
+            if(fichier!=NULL)
+            {
+                fprintf(fichier,"%d\t%.16lf\t%.16lf\n",j,erc,ers);
+                //fprintf(fichier,"%d\t%lf\n",i,log10(errmax));
+            }
         }
         errmax=0;
-    }
+    //}
 
     fclose(fichier);
     //system ("gnuplot -p -e \"plot 'output/erreur_n_.dat' u 1:2 w l, 'output/erreur_n_.dat' u 1:3 w l\";");
@@ -115,8 +111,8 @@ int main()
     //system ("gnuplot -p -e \"plot 'output/erreur_n_4.dat' u 1:2 w l, 'output/erreur_n_4.dat' u 1:3 w l\";");
     //system ("gnuplot -p -e \"plot 'output/erreur_n_8.dat' u 1:2 w l, 'output/erreur_n_8.dat' u 1:3 w l\";");
     //system ("gnuplot -p -e \"plot 'output/erreur_n_16.dat' u 1:2 w l, 'output/erreur_n_16.dat' u 1:3 w l\";");
-    //system ("gnuplot -p -e \"plot 'output/erreur_n_32.dat' u 1:2 w l, 'output/erreur_n_32.dat' u 1:3 w l\";");
-    system ("gnuplot -p -e \"plot 'output/erreur_n_64.dat' u 1:2 w l, 'output/erreur_n_64.dat' u 1:3 w l\";");
+    system ("gnuplot -p -e \"plot 'output/erreur_n_32.dat' u 1:2 w l, 'output/erreur_n_32.dat' u 1:3 w l\";");
+    //system ("gnuplot -p -e \"plot 'output/erreur_n_64.dat' u 1:2 w l, 'output/erreur_n_64.dat' u 1:3 w l\";");
     //system ("gnuplot -p -e \"plot 'output/erreur_max.dat' u 1:2 w l\";");
     return 0;
 }
