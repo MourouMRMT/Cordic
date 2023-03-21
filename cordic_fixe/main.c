@@ -1,3 +1,4 @@
+/**MARIMOUTOU Mourougen**/
 #include <stdio.h>
 #include <stdlib.h>
 #include<math.h>
@@ -6,13 +7,11 @@
 #define PI M_PI
 
 short int Theta[N]={0};
-//short int K[N]={0};
 short int A[N]={0};
-
 double coeff=PI/180.0;
-short int An;
-double M_val=1000;
-double M_angle=100;
+
+double M_val=100; //facteur pour x,y et A
+double M_angle=100; //facteur pour alpha et theta
 
 unsigned short fp2fix(double M, double x)
 {
@@ -32,20 +31,13 @@ void calcul_vecteur()
     for(int i=0;i<N;i++)
     {
         Theta[i]=fp2fix(M_angle,atan(d));
-
-        //K[i]=fp2fix(M_val,cos(atan(pow(2,-i))));
-
         An_temp*=cos(atan(d));
         A[i]=fp2fix(M_val,An_temp);
-        //printf("T:%u K:%u \n",Theta[i],K[i]);
-        //printf("An : %lf\n",An_temp);
         d=d/2;
     }
-    //An=fp2fix(M_val,An_temp);
-    //printf("An : %d\n",An);
 }
 
-short int cordic_fixe(short int phi_int,int n_iter,unsigned short *xr,unsigned short *yr,double *errcos,double *errsin)
+short int cordic_fixe(short int phi_int,int n_iter,short int *xr,short int *yr,double *errcos,double *errsin)
 {
     short int x[2]={0};
     x[0]=A[n_iter];
@@ -95,7 +87,7 @@ int main()
 
 
 
-    unsigned short xf,yf;
+    short int xf,yf;
     double erc,ers;
     double PHI;
     int iter;
@@ -107,8 +99,8 @@ int main()
     scanf("%lf %d",&PHI,&iter);
     //cordic_fixe(fp2fix(M_angle,PHI*coeff),N,&xf,&yf,&erc,&ers);
 
-    //for(int i=0;i<15;i++)
-    //{
+    for(int i=0;i<15;i++)
+    {
 
         for(int j=0;j<=90;j++)
         {
@@ -124,13 +116,13 @@ int main()
             }
             if(fichier!=NULL)
             {
-            fprintf(fichier,"%d\t%lf\t%lf\n",j,erc,ers);
-            //fprintf(fichier,"%d\t%lf\n",j,errmax);
+            //fprintf(fichier,"%d\t%lf\t%lf\n",j,erc,ers);
+            //fprintf(fichier,"%d\t%lf\n",i,errmax);
             }
             errmax=0;
         }
 
-    //}
+    }
 
     fclose(fichier);
     //system ("gnuplot -p -e \"plot 'output/erreur_n_.dat' u 1:2 w l, 'output/erreur_n_.dat' u 1:3 w l\";");
@@ -140,6 +132,6 @@ int main()
     //system ("gnuplot -p -e \"plot 'output/erreur_n_16.dat' u 1:2 w l, 'output/erreur_n_16.dat' u 1:3 w l\";");
     //system ("gnuplot -p -e \"plot 'output/erreur_n_32.dat' u 1:2 w l, 'output/erreur_n_32.dat' u 1:3 w l\";");
     //system ("gnuplot -p -e \"plot 'output/erreur_n_14.dat' u 1:2 w l, 'output/erreur_n_14.dat' u 1:3 w l\";");
-    //system ("gnuplot -p -e \"plot 'output/erreur_max.dat' u 1:2 w l\";");
+    system ("gnuplot -p -e \"plot 'output/erreur_max.dat' u 1:2 w l\";");
     return 0;
 }
